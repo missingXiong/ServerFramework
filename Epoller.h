@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <mutex>
 
 #include "Channel.h"
 
+// a class for epoll
 class Epoller
 {
 public:
@@ -19,8 +20,8 @@ public:
     void updateChannel(Channel* pChannel);
 
 private:
-    int epollfd_;
+    int epollfd_; // epoll fd
     std::vector<struct epoll_event> eventList_; // receive events from epoll_wait
-    std::map<int, Channel*> channelMap_;
-    std::mutex mutex_;
+    std::mutex mutex_; // mutex_ for channelMap_ because main thread will add new connection into eventLoop
+    std::unordered_map<int, Channel*> channelMap_; // fd -> Channel
 };

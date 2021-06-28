@@ -46,7 +46,7 @@ void ThreadPool::work()
 	{
 		Task task;
 		if (taskqueue_.try_pop(task))
-			(task.func)(task.args);
+			task();
 		else
 			std::this_thread::yield();
 	}

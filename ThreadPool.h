@@ -6,16 +6,11 @@
 #include <functional>
 #include "ThreadSafeQueue.h"
 
-struct ThreadPoolTask 
-{
-	std::function<void(std::shared_ptr<void>)> func;
-	std::shared_ptr<void> args;
-};
 
 class ThreadPool // work threadpool
 {
 public:
-	typedef ThreadPoolTask Task;
+	typedef std::function<void()> Task;
 
 	ThreadPool(int threadnum = std::thread::hardware_concurrency());
 	~ThreadPool();

@@ -12,7 +12,7 @@ struct ThreadPoolTask
 	std::shared_ptr<void> args;
 };
 
-class ThreadPool
+class ThreadPool // work threadpool
 {
 public:
 	typedef ThreadPoolTask Task;

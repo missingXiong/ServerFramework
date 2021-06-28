@@ -24,6 +24,7 @@ Epoller::~Epoller()
 
 void Epoller::poll(ChannelList &activeChannelList)
 {
+    // remember to setup timeout
     int nfds = epoll_wait(epollfd_, &*eventList_.begin(), eventList_.size(), EPOLLWAIT_TIME);
     if (nfds < 0)
         perror("epoll wait error");
@@ -31,7 +32,7 @@ void Epoller::poll(ChannelList &activeChannelList)
     for (int i = 0; i < nfds; i++)
     {
         int events = eventList_[i].events;
-        Channel*pChannel = (Channel*)eventList_[i].data.ptr;
+        Channel* pChannel = (Channel*)eventList_[i].data.ptr;
         int fd = pChannel->getfd();
 
         std::unordered_map<int, Channel*>::const_iterator iter;

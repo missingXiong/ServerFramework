@@ -5,6 +5,7 @@
 // a class for events: different events have different callback
 class Channel
 {
+public:
     typedef std::function<void()> Callback;
 
     Channel() : fd_(-1) { }

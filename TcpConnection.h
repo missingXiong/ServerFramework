@@ -10,6 +10,13 @@
 #include "EventLoop.h"
 #include "Channel.h"
 
+typedef enum
+{
+    CONNECTED,
+    DISCONNECTING, // after send completed, the state will be set to DISCONNECTED
+    DISCONNECTED // ready to close fd
+} ConnectionState;
+
 class TcpConnection: public std::enable_shared_from_this<TcpConnection>
 {
 public:
@@ -42,12 +49,9 @@ public:
     void setConnectionCleanupHandler(const Callback& cb);
 
 private:
-    int sendn(int fd, std::string& bufferout);
-    int recvn(int fd, std::string& bufferin);
-    
-private:
     EventLoop* loop_;  // the current connection is registered in EventLoop loop_;
     int fd_;
+    ConnectionState connState_;
     struct sockaddr_in clientaddr_;
     std::unique_ptr<Channel> pChannel_;
     

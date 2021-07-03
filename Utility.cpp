@@ -55,7 +55,7 @@ int recvn(int fd, std::string &bufferin)
             else
                 return -1;
         }
-        else if (nread == 0) 
+        else if (nread == 0)
             break;
 
         readSum += nread;

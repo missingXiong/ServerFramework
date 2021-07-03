@@ -23,24 +23,12 @@ TcpConnection::TcpConnection(EventLoop *loop, int fd, const struct sockaddr_in &
 TcpConnection::~TcpConnection()
 {
     // remove event(channel) from eventloop, then deallocate the memory(automitically)
-    loop_->addPendingTask(std::bind(&EventLoop::removeChannelFromEpoller, loop_, pChannel_.get()));
     close(fd_);
 }
 
 void TcpConnection::addChannelToLoop()
 {
-}
-void TcpConnection::send(const std::string &)
-{
-}
-void TcpConnection::sendInLoop()
-{
-}
-void TcpConnection::shutdown()
-{
-}
-void TcpConnection::shutdownInLoop()
-{
+    loop_->runInLoop(std::bind(&EventLoop::addChannelToEpoller, loop_, pChannel_.get()));
 }
 
 void TcpConnection::handleRead()
@@ -84,6 +72,9 @@ void TcpConnection::handleWrite()
 
 void TcpConnection::handleError()
 {
+    bufferin_.clear();
+    bufferout_.clear();
+    handleClose();
 }
 
 void TcpConnection::handleClose()
@@ -101,23 +92,34 @@ void TcpConnection::handleClose()
     }
     else // cleanup the connection
     {
-        
+        loop_->runInLoop(std::bind(&EventLoop::removeChannelFromEpoller, loop_, pChannel_.get()));
+        closeCallback_(shared_from_this());
+        connState_ = ConnectionState::DISCONNECTED;
     }
 }
 
 void TcpConnection::setmessageHandler(const MessageCallback &cb)
 {
+    messageCallback_ = cb;
 }
+
 void TcpConnection::setCompletedSendHandler(const Callback &cb)
 {
+    completeSendCallback_ = cb;
 }
+
 void TcpConnection::setCloseHandler(const Callback &cb)
 {
+    closeCallback_ = cb;
 }
+
 void TcpConnection::setErrorHandler(const Callback &cb)
 {
+    errorCallback_ = cb;
 }
+
 void TcpConnection::setConnectionCleanupHandler(const Callback &cb)
 {
+    connectionCleanup_ = cb;
 }
 

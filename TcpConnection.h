@@ -32,10 +32,6 @@ public:
     EventLoop* getLoop() const { return loop_; }
 
     void addChannelToLoop();
-    void send(const std::string&);
-    void sendInLoop();
-    void shutdown();
-    void shutdownInLoop();
 
     void handleRead();
     void handleWrite();

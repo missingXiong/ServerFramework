@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -8,13 +9,11 @@
 class EventLoopThreadPool // IO thread pool
 {
 public:
-    EventLoopThreadPool(EventLoop* main, 
-        int threadnum = std::thread::hardware_concurrency());
+    EventLoopThreadPool(EventLoop* main, int threadnum);
     ~EventLoopThreadPool();
 
     void start();
 
-private:
     EventLoop* getNextEventLoop();
 
 private:

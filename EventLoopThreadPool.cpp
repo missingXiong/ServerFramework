@@ -29,8 +29,10 @@ void EventLoopThreadPool::start()
 
 EventLoop* EventLoopThreadPool::getNextEventLoop()
 {
+    // if no IO thread, then using the main thread
     if (threadNum_ <= 0) return mainLoop_;
 
+    // polling cycle strategy
     EventLoop* evLoop = threadList_[nextEventLoop_]->getEventLoop();
     nextEventLoop_ = (nextEventLoop_ + 1) % threadNum_;
     return evLoop;

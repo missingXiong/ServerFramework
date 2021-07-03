@@ -32,16 +32,16 @@ void Epoller::poll(ChannelList &activeChannelList)
     for (int i = 0; i < nfds; i++)
     {
         int events = eventList_[i].events;
-        Channel* pChannel = (Channel*)eventList_[i].data.ptr;
+        Channel* pChannel = static_cast<Channel*>(eventList_[i].data.ptr);
         int fd = pChannel->getfd();
 
-        std::unordered_map<int, Channel*>::const_iterator iter;
-        {
-            std::lock_guard<std::mutex> mut(mutex_);
-            iter = channelMap_.find(fd);
-        }
+        // std::unordered_map<int, Channel*>::const_iterator iter;
+        // {
+        //     std::lock_guard<std::mutex> mut(mutex_);
+        //     iter = channelMap_.find(fd);
+        // }
 
-        if (iter != channelMap_.end())
+        if (channelMap_.find(fd) != channelMap_.end())
         {
             pChannel->setEvents(events);
             activeChannelList.push_back(pChannel);
@@ -55,11 +55,11 @@ void Epoller::addChannel(Channel *pChannel)
     struct epoll_event ev;
     ev.events = pChannel->getEvents();
     ev.data.ptr = pChannel;
-    {
-        std::lock_guard<std::mutex> mut(mutex_);
-        channelMap_[fd] = pChannel;
-    }
-
+    // {
+    //     std::lock_guard<std::mutex> mut(mutex_);
+    //     channelMap_[fd] = pChannel;
+    // }
+    channelMap_[fd] = pChannel;
    
     if (epoll_ctl(epollfd_, EPOLL_CTL_ADD, fd, &ev) == -1)
     {
@@ -74,10 +74,11 @@ void Epoller::removeChannel(Channel *pChannel)
     struct epoll_event ev;
     ev.events = pChannel->getEvents();
     ev.data.ptr = pChannel;
-    {
-        std::lock_guard<std::mutex> mut(mutex_);
-        channelMap_.erase(fd);
-    }
+    // {
+    //     std::lock_guard<std::mutex> mut(mutex_);
+    //     channelMap_.erase(fd);
+    // }
+    channelMap_.erase(fd);
 
     if (epoll_ctl(epollfd_, EPOLL_CTL_DEL, fd, &ev) == -1)
     {

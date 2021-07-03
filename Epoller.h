@@ -22,6 +22,6 @@ public:
 private:
     int epollfd_; // epoll fd
     std::vector<struct epoll_event> eventList_; // receive events from epoll_wait
-    std::mutex mutex_; // mutex_ for channelMap_ because main thread will add new connection into eventLoop
+    // std::mutex mutex_; // mutex_ for channelMap_ because main thread will add new connection into eventLoop
     std::unordered_map<int, Channel*> channelMap_; // fd -> Channel
 };

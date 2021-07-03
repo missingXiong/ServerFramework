@@ -22,9 +22,9 @@ public:
     void quit();
     void loop(); 
     
-    void addChannelToEpoller(Channel* pChannel);
-    void removeChannelFromEpoller(Channel* pChannel);
-    void updateChannelToEpoller(Channel* pChannel);
+    void addChannelToEpoller(Channel* pChannel); // don't call from other thread
+    void removeChannelFromEpoller(Channel* pChannel); // don't call from other thread
+    void updateChannelToEpoller(Channel* pChannel); // don't call from other thread
 
     std::thread::id getThreadId() const { return threadId_;}
 
@@ -32,12 +32,13 @@ public:
     void handleRead();
     void handleError();
 
-    void addPendingTask(Task task);
+    void runInLoop(Task&& task); // safe to call from other thread, prefer to using this one
     
 private:
     bool isInLoopThread();
     void wakeup();
     void executePendingTasks();
+    void addPendingTask(Task&& task); // safe to call from other thread
 
 private:
     bool quit_; // stop/start the eventloop

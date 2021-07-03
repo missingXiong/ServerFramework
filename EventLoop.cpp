@@ -84,7 +84,15 @@ void EventLoop::handleError()
 {
 }
 
-void EventLoop::addPendingTask(Task task)
+void EventLoop::runInLoop(Task&& task)
+{
+    if (isInLoopThread())
+        task();
+    else
+        addPendingTask(std::move(task));
+}
+
+void EventLoop::addPendingTask(Task&& task)
 {
     {
         std::lock_guard<std::mutex> mut(mutex_);

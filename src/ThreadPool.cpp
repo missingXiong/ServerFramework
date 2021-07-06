@@ -1,12 +1,14 @@
 #include "../include/ThreadPool.h"
 
-ThreadPool::ThreadPool(int threadnum /*= std::thread::hardware_concurrency()*/)
+template<typename T>
+ThreadPool<T>::ThreadPool(int threadnum /*= std::thread::hardware_concurrency()*/)
 	: started_(false), threadNum_(threadnum)
 {
 
 }
 
-ThreadPool::~ThreadPool()
+template<typename T>
+ThreadPool<T>::~ThreadPool()
 {
 	std::cout << "Clear up the thread pool" << std::endl;
 
@@ -18,7 +20,8 @@ ThreadPool::~ThreadPool()
 	}
 }
 
-void ThreadPool::start()
+template<typename T>
+void ThreadPool<T>::start()
 {
 	if (threadNum_ > 0)
 	{
@@ -30,21 +33,24 @@ void ThreadPool::start()
 	}
 }
 
-void ThreadPool::stop()
+template<typename T>
+void ThreadPool<T>::stop()
 {
 	started_ = false;
 }
 
-void ThreadPool::addTask(Task task)
+template<typename T>
+void ThreadPool<T>::addTask(T task)
 {
 	taskqueue_.push(task);
 }
 
-void ThreadPool::work()
+template<typename T>
+void ThreadPool<T>::work()
 {
 	while (started_)
 	{
-		Task task;
+		T task;
 		if (taskqueue_.try_pop(task))
 			task();
 		else

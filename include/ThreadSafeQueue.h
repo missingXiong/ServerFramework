@@ -5,15 +5,18 @@
 #include <queue>
 #include <memory>
 #include <mutex>
+#include <condition_variable>
+
+#include "noncopyable.h"
 
 template<typename T>
-class thread_safe_queue      // a thread safe queue
+class thread_safe_queue : public noncopyable     // a thread safe queue
 {
 public:
 	thread_safe_queue() {}
 
-	thread_safe_queue(const thread_safe_queue&) = delete;
-	thread_safe_queue& operator = (const thread_safe_queue&) = delete;
+	// thread_safe_queue(const thread_safe_queue&) = delete;
+	// thread_safe_queue& operator = (const thread_safe_queue&) = delete;
 
 	void push(T new_value);
 

@@ -17,7 +17,7 @@ EventLoopThread::~EventLoopThread()
 
 void EventLoopThread::start()
 {
-    thread_ = std::move(std::thread(&EventLoopThread::run, this));
+    thread_ = std::thread(&EventLoopThread::run, this);
 }
 
 void EventLoopThread::run()

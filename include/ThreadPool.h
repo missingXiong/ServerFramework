@@ -6,23 +6,21 @@
 #include <functional>
 #include "ThreadSafeQueue.h"
 
-
+template<typename T>
 class ThreadPool // work threadpool
 {
 public:
-	typedef std::function<void()> Task;
-
 	ThreadPool(int threadnum = std::thread::hardware_concurrency());
 	~ThreadPool();
 
 	void start();
 	void stop();
-	void addTask(Task task);
+	void addTask(T task);
 	
 private:
 	bool started_;
 	int threadNum_;
-	thread_safe_queue<Task> taskqueue_;
+	thread_safe_queue<T> taskqueue_;
 	std::vector<std::thread> threadList_;
 
 	void work();

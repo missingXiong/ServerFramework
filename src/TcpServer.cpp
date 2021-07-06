@@ -7,8 +7,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "TcpServer.h"
-#include "Utility.h"
+#include "../include/TcpServer.h"
+#include "../include/Utility.h"
 
 const int MAXCONNECTION = 20000;
 

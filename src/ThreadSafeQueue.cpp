@@ -1,4 +1,4 @@
-#include "ThreadSafeQueue.h"
+#include "../include/ThreadSafeQueue.h"
 
 template<typename T>
 void thread_safe_queue<T>::push(T new_value)

@@ -1,4 +1,4 @@
-#include "EventLoopThread.h"
+#include "../include/EventLoopThread.h"
 
 EventLoopThread::EventLoopThread()
     : loop_(nullptr)

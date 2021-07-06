@@ -1,6 +1,6 @@
 #include <sys/epoll.h>
 
-#include "Channel.h"
+#include "../include/Channel.h"
 
 void Channel::handleEvents()
 {

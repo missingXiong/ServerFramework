@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "TcpConnection.h"
-#include "Utility.h"
+#include "../include/Utility.h"
 
 const int BUFSIZE = 4096;
 

@@ -15,8 +15,15 @@ set(SOURSE_DIR
     ./src/ListenningSocket.cpp
     ./src/TcpConnection.cpp
     ./src/TcpServer.cpp
-    ./src/ThreadSafeQueue.cpp
-    ./src/ThreadPool.cpp)
+    #./src/ThreadSafeQueue.cpp
+    #./src/ThreadPool.cpp
+    EchoServer.cpp)
+
+set(
+    INCLUDE_DIR
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}
+)
 
 set(CXX_FLAGS
     -g
@@ -31,6 +38,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${INCLUDE_DIR})
 
 add_executable(webserver ${SOURSE_DIR})

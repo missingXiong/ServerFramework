@@ -98,6 +98,40 @@ void TcpConnection::handleClose()
     }
 }
 
+void TcpConnection::sendMsg(const std::string& msg)
+{
+    bufferout_ += msg;
+    loop_->runInLoop(std::bind(&TcpConnection::sendInLoop, shared_from_this()));
+}
+
+void TcpConnection::sendInLoop()
+{
+    if (connState_ == ConnectionState::DISCONNECTED)
+        return;
+    int ret = sendn(fd_, bufferout_);
+    if (ret >= 0)
+    {
+        uint32_t events = pChannel_->getEvents();
+        if (bufferout_.length() > 0) // buffer is not sent completely
+        {
+            pChannel_->setEvents(events | EPOLLOUT);
+            loop_->updateChannelToEpoller(pChannel_.get());
+        }
+        else // sent completed, remove EPOLLOUT
+        {
+            pChannel_->setEvents(events & (~EPOLLOUT));
+            completeSendCallback_(shared_from_this());
+
+            if (connState_ == ConnectionState::DISCONNECTING)
+                handleClose();
+        }
+    }
+    // else if (ret == 0)  //
+    //     handleClose();
+    else
+        handleError();
+}
+
 void TcpConnection::setmessageHandler(const MessageCallback &cb)
 {
     messageCallback_ = cb;

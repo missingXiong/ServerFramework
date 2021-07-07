@@ -9,6 +9,7 @@
 
 #include "EventLoop.h"
 #include "Channel.h"
+#include "noncopyable.h"
 
 typedef enum
 {
@@ -17,7 +18,7 @@ typedef enum
     DISCONNECTED // ready to close fd
 } ConnectionState;
 
-class TcpConnection: public std::enable_shared_from_this<TcpConnection>
+class TcpConnection: public noncopyable, std::enable_shared_from_this<TcpConnection>
 {
 public:
     typedef std::shared_ptr<TcpConnection> spTcpConnection;
@@ -33,10 +34,13 @@ public:
 
     void addChannelToLoop();
 
-    void handleRead();
-    void handleWrite();
+    void handleRead(); // waiting to read
+    void handleWrite(); // waiting to write
     void handleError();
     void handleClose();
+
+    void sendMsg(const std::string& msg);
+    
 
     void setmessageHandler(const MessageCallback& cb);
     void setCompletedSendHandler(const Callback& cb);
@@ -61,4 +65,6 @@ private:
     Callback closeCallback_;
     Callback errorCallback_;
     Callback connectionCleanup_;
+
+    void sendInLoop();
 };
